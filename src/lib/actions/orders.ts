@@ -24,13 +24,14 @@ export async function createOrder(tableId: string, sessionId: string): Promise<{
     return { order: data };
 }
 
-export async function getOpenOrderForTable(tableId: string): Promise<Order | null> {
+export async function getOpenOrderForTable(tableId: string, sessionId: string): Promise<Order | null> {
     const supabase = await createClient();
 
     const { data } = await supabase
         .from("orders")
         .select("*")
         .eq("table_id", tableId)
+        .eq("session_id", sessionId)
         .eq("status", "open")
         .single();
 
@@ -196,10 +197,10 @@ export async function getKitchenOrders(): Promise<OrderWithItems[]> {
         .in("status", ["sent", "preparing", "completed"])
         .order("created_at", { ascending: true });
 
-        console.log("fetched data from orders table",data);
+    console.log("fetched data from orders table", data);
 
     return (data as OrderWithItems[]) || [];
-    
+
 }
 
 export async function getOrdersForReports(filters?: {

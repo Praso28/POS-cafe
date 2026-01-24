@@ -84,7 +84,7 @@ export function POSClient({ products, tables, initialSession, paymentMethods }: 
         setIsLoading(true);
 
         // Check for existing open order
-        const existingOrder = await getOpenOrderForTable(table.id);
+        const existingOrder = await getOpenOrderForTable(table.id, session.id);
         if (existingOrder) {
             const orderWithItems = await getOrderWithItems(existingOrder.id);
             setCurrentOrder(orderWithItems);
