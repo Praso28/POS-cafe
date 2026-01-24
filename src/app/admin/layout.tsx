@@ -8,9 +8,10 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
     { href: "/admin", label: "Dashboard", icon: "📊" },
+    { href: "/admin/orders", label: "Orders", icon: "📋" },
     { href: "/admin/products", label: "Products", icon: "☕" },
     { href: "/admin/tables", label: "Tables", icon: "🪑" },
-    { href: "/admin/payments", label: "Payments", icon: "💳" },
+    { href: "/admin/payments", label: "Payment Methods", icon: "💳" },
 ];
 
 export default function AdminLayout({
