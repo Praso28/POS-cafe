@@ -177,8 +177,8 @@ export function POSClient({ products, tables, initialSession, paymentMethods }: 
                                 Orders
                             </button>
                             <div className="absolute left-0 top-full mt-1 bg-white border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[140px]">
-                                <a href="/admin" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Orders</a>
-                                <a href="/admin/payments" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Payment</a>
+                                <a href="/admin/orders" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Orders</a>
+                                <a href="/admin/orders/payments" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Payment</a>
                                 <a href="/customer" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Customer</a>
                             </div>
                         </div>
