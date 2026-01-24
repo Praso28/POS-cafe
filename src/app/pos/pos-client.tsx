@@ -165,38 +165,94 @@ export function POSClient({ products, tables, initialSession, paymentMethods }: 
         router.refresh();
     }
 
-    // No session view
+    // No session view - with top menu and POS terminal card
     if (!session) {
         return (
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-                <Card className="w-full max-w-md mx-4">
-                    <CardHeader className="text-center">
-                        <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-4">
-                            <span className="text-4xl">☕</span>
+            <div className="min-h-screen bg-gray-50 flex flex-col">
+                {/* Top Menu Bar */}
+                <header className="bg-white border-b px-6 py-3 flex items-center gap-8">
+                    <div className="flex items-center gap-6">
+                        <div className="relative group">
+                            <button className="text-gray-700 hover:text-gray-900 font-medium px-3 py-2">
+                                Orders
+                            </button>
+                            <div className="absolute left-0 top-full mt-1 bg-white border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[140px]">
+                                <a href="/admin" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Orders</a>
+                                <a href="/admin/payments" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Payment</a>
+                                <a href="/customer" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Customer</a>
+                            </div>
                         </div>
-                        <CardTitle className="text-2xl">POS Terminal</CardTitle>
-                        <p className="text-gray-500">Start a session to begin taking orders</p>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <Button
-                            onClick={handleOpenSession}
-                            className="w-full h-14 text-lg"
-                            disabled={isLoading}
-                        >
-                            {isLoading ? "Starting..." : "Start POS Session"}
-                        </Button>
-                        <div className="flex gap-2">
-                            <Button variant="outline" className="flex-1" asChild>
-                                <a href="/admin">Admin Panel</a>
+                        <div className="relative group">
+                            <button className="text-gray-700 hover:text-gray-900 font-medium px-3 py-2">
+                                Products
+                            </button>
+                            <div className="absolute left-0 top-full mt-1 bg-white border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[140px]">
+                                <a href="/admin/products" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Products</a>
+                                <a href="/admin/products" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Category</a>
+                            </div>
+                        </div>
+                        <div className="relative group">
+                            <button className="text-gray-700 hover:text-gray-900 font-medium px-3 py-2">
+                                Reporting
+                            </button>
+                            <div className="absolute left-0 top-full mt-1 bg-white border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[140px]">
+                                <a href="/reports" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Dashboard</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="ml-auto flex items-center gap-4">
+                        <form action={signOut}>
+                            <Button variant="ghost" type="submit" size="sm">
+                                Sign Out
                             </Button>
-                            <form action={signOut} className="flex-1">
-                                <Button variant="ghost" type="submit" className="w-full">
-                                    Sign Out
+                        </form>
+                    </div>
+                </header>
+
+                {/* POS Terminal Card */}
+                <div className="flex-1 p-8">
+                    <div className="max-w-sm">
+                        <Card className="relative">
+                            <CardHeader className="pb-2">
+                                <div className="flex items-start justify-between">
+                                    <CardTitle className="text-xl font-bold text-gray-900">Odoo Cafe</CardTitle>
+                                    {/* Three dot menu */}
+                                    <div className="relative group">
+                                        <button className="p-1 hover:bg-gray-100 rounded">
+                                            <svg className="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                            </svg>
+                                        </button>
+                                        <div className="absolute right-0 top-full mt-1 bg-white border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[160px]">
+                                            <a href="/admin" className="block px-4 py-2 hover:bg-gray-100 text-gray-700 border-b">Setting</a>
+                                            <a href="/kitchen" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Kitchen Display</a>
+                                            <a href="/customer" className="block px-4 py-2 hover:bg-gray-100 text-gray-700">Customer Display</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="space-y-3">
+                                <div className="text-sm text-gray-600 space-y-1">
+                                    <div className="flex gap-2">
+                                        <span className="text-gray-500">Last open:</span>
+                                        <span>{new Date().toLocaleDateString('en-GB')}</span>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <span className="text-gray-500">Last Sell:</span>
+                                        <span>₹5000</span>
+                                    </div>
+                                </div>
+                                <Button
+                                    onClick={handleOpenSession}
+                                    className="bg-red-500 hover:bg-red-600 text-white font-medium px-6"
+                                    disabled={isLoading}
+                                >
+                                    {isLoading ? "Starting..." : "Open Session"}
                                 </Button>
-                            </form>
-                        </div>
-                    </CardContent>
-                </Card>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
             </div>
         );
     }

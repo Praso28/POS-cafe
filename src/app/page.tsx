@@ -20,25 +20,6 @@ export default function Home() {
                             Login
                         </Button>
                     </Link>
-                    <Link href="/pos">
-                        <Button size="lg" variant="outline" className="w-full sm:w-auto text-lg px-8 py-6">
-                            POS Terminal
-                        </Button>
-                    </Link>
-                </div>
-
-                <div className="flex flex-wrap gap-4 justify-center pt-8">
-                    <Link href="/admin" className="text-blue-600 hover:underline">
-                        Admin Panel
-                    </Link>
-                    <span className="text-gray-400">|</span>
-                    <Link href="/kitchen" className="text-blue-600 hover:underline">
-                        Kitchen Display
-                    </Link>
-                    <span className="text-gray-400">|</span>
-                    <Link href="/customer" className="text-blue-600 hover:underline">
-                        Customer Display
-                    </Link>
                 </div>
             </div>
         </main>
