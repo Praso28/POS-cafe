@@ -1,9 +1,8 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Card } from "@/components/ui/card";
 import { useRealtimeCustomerOrder } from "@/hooks/use-realtime-customer";
+import { UPIQR } from "@/components/payments/upi-qr";
 import type { OrderWithItems } from "@/lib/types/database";
 
 interface CustomerClientProps {
@@ -11,119 +10,126 @@ interface CustomerClientProps {
     initialOrder: OrderWithItems | null;
 }
 
-const statusConfig: Record<string, { label: string; color: string; icon: string }> = {
-    open: { label: "Order Placed", color: "bg-gray-500", icon: "📝" },
-    sent: { label: "Sent to Kitchen", color: "bg-orange-500", icon: "🔔" },
-    preparing: { label: "Being Prepared", color: "bg-blue-500", icon: "👨‍🍳" },
-    completed: { label: "Ready!", color: "bg-green-500", icon: "✅" },
-    paid: { label: "Paid - Thank You!", color: "bg-purple-500", icon: "💰" },
-};
-
 export function CustomerClient({ orderId, initialOrder }: CustomerClientProps) {
     const { order, payment } = useRealtimeCustomerOrder(orderId, initialOrder);
 
+    // 1. Loading / No Order State
     if (!order) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-                <Card className="w-full max-w-md text-center py-12">
-                    <CardContent>
-                        <p className="text-6xl mb-4">🔍</p>
-                        <h2 className="text-2xl font-bold mb-2">Order Not Found</h2>
-                        <p className="text-gray-500">
-                            Please check the order ID and try again.
-                        </p>
-                    </CardContent>
-                </Card>
+            <div className="min-h-screen bg-black flex items-center justify-center text-white">
+                <div className="text-center animate-pulse">
+                    <h1 className="text-4xl font-bold mb-4">Odoo Cafe</h1>
+                    <p className="text-xl text-gray-400">Waiting for order details...</p>
+                </div>
             </div>
         );
     }
 
-    const status = statusConfig[order.status] || statusConfig.open;
-    const orderNumber = order.id.slice(-4).toUpperCase();
+    // 2. Determine View State
+    const isPaid = order.status === "paid" || payment?.status === "completed";
+    const isPaymentPending = payment && payment.status === "pending" && payment.method === "upi";
 
+    // 3. Render
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-            <Card className="w-full max-w-md shadow-xl">
-                <CardHeader className="text-center pb-2">
-                    <div className="mx-auto w-20 h-20 bg-white rounded-full flex items-center justify-center text-5xl shadow-md mb-4">
-                        {status.icon}
+        <div className="min-h-screen flex bg-[#1a1c24] text-white font-sans overflow-hidden">
+            {/* LEFT PANEL: Branding */}
+            <div className="w-1/3 border-r border-gray-800 flex flex-col justify-between p-12 bg-[#1a1c24]">
+                <div className="space-y-4">
+                    <div className="inline-block px-4 py-2 border border-red-500 rounded-lg text-red-500 text-sm font-semibold tracking-wide uppercase">
+                        Logo
                     </div>
-                    <CardTitle className="text-2xl">Order #{orderNumber}</CardTitle>
-                    <p className="text-gray-500">{order.tables.name}</p>
-                </CardHeader>
+                </div>
 
-                <CardContent className="space-y-6">
-                    {/* Status */}
-                    <div className="text-center">
-                        <Badge className={`${status.color} text-white text-lg px-4 py-2`}>
-                            {status.label}
-                        </Badge>
-                    </div>
+                <div className="space-y-2">
+                    <h1 className="text-5xl font-light leading-tight text-gray-300">
+                        Welcome to<br />
+                        <span className="font-bold text-white">Odoo Cafe</span>
+                    </h1>
+                </div>
 
-                    {/* Progress Bar */}
-                    <div className="flex items-center gap-2">
-                        {["sent", "preparing", "completed", "paid"].map((s, i) => (
-                            <div
-                                key={s}
-                                className={`flex-1 h-2 rounded-full ${["sent", "preparing", "completed", "paid"].indexOf(order.status) >= i
-                                        ? "bg-blue-500"
-                                        : "bg-gray-200"
-                                    }`}
-                            />
-                        ))}
-                    </div>
+                <div className="text-sm text-gray-600">
+                    Powered by Odoo
+                </div>
+            </div>
 
-                    <Separator />
+            {/* RIGHT PANEL: Dynamic Content */}
+            <div className="flex-1 flex flex-col p-12 bg-[#23263a] relative">
 
-                    {/* Order Items */}
-                    <div>
-                        <h3 className="font-semibold mb-3">Your Order</h3>
-                        <ul className="space-y-2">
-                            {order.order_items.map((item) => (
-                                <li
-                                    key={item.id}
-                                    className="flex justify-between items-center p-2 bg-gray-50 rounded-lg"
-                                >
-                                    <span>{item.products.name}</span>
-                                    <div className="flex items-center gap-4">
-                                        <span className="text-gray-500">×{item.qty}</span>
-                                        <span className="font-semibold">₹{(item.price * item.qty).toFixed(2)}</span>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <Separator />
-
-                    {/* Total */}
-                    <div className="flex justify-between items-center text-xl">
-                        <span className="font-semibold">Total</span>
-                        <span className="font-bold text-green-600">₹{order.total.toFixed(2)}</span>
-                    </div>
-
-                    {/* Payment Status */}
-                    {payment && (
-                        <div className={`p-4 rounded-lg text-center ${payment.status === "completed" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"
-                            }`}>
-                            <p className="font-semibold">
-                                {payment.status === "completed"
-                                    ? "✓ Payment Received"
-                                    : "⏳ Payment Pending"}
-                            </p>
-                            <p className="text-sm mt-1">
-                                Method: {payment.method.toUpperCase()}
-                            </p>
+                {/* VIEW 1: THANK YOU (Paid) */}
+                {isPaid ? (
+                    <div className="flex-1 flex flex-col items-center justify-center text-center space-y-6 animate-in fade-in duration-500">
+                        <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center text-5xl mb-4 shadow-lg shadow-green-500/20">
+                            ✓
                         </div>
-                    )}
-
-                    {/* Footer */}
-                    <div className="text-center text-sm text-gray-500 pt-4">
-                        <p>This display updates automatically</p>
-                        <p className="mt-1">☕ Thank you for your order!</p>
+                        <h2 className="text-4xl font-bold text-white">Thank you for shopping with us!</h2>
+                        <p className="text-xl text-gray-400">See you again soon</p>
                     </div>
-                </CardContent>
-            </Card>
+                ) : isPaymentPending ? (
+                    /* VIEW 2: PAYMENT (UPI QR) */
+                    <div className="flex-1 flex flex-col items-center justify-center animate-in fade-in zoom-in duration-300">
+                        <h2 className="text-3xl font-bold mb-8 text-white">Scan to Pay</h2>
+                        <div className="bg-white p-4 rounded-2xl shadow-2xl">
+                            {/* Reusing existing UPI component Logic but styled for dark mode context */}
+                            <UPIQR
+                                upiId={payment?.upi_id || "demo@upi"} // Fallback/Fetch from payment method logic if needed, but simplified for display
+                                amount={order.total}
+                            />
+                        </div>
+                        <p className="mt-8 text-2xl font-bold text-green-400">Total: ₹{order.total.toFixed(2)}</p>
+                    </div>
+                ) : (
+                    /* VIEW 3: CART (Active Order) */
+                    <div className="flex-1 flex flex-col h-full animate-in slide-in-from-right duration-500">
+                        <div className="flex-1 overflow-y-auto pr-4 custom-scrollbar">
+                            {/* Empty State */}
+                            {order.order_items.length === 0 && (
+                                <div className="h-full flex items-center justify-center text-gray-500">
+                                    <p className="text-xl">Your items will appear here</p>
+                                </div>
+                            )}
+
+                            {/* Items List */}
+                            <div className="space-y-4">
+                                {order.order_items.map((item) => (
+                                    <div key={item.id} className="flex items-center gap-6 p-4 rounded-xl bg-[#2e3248] hover:bg-[#343952] transition-colors">
+                                        {/* Placeholder Image */}
+                                        <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center text-2xl flex-shrink-0">
+                                            ☕
+                                        </div>
+
+                                        <div className="flex-1">
+                                            <h3 className="text-xl font-medium text-white">{item.products?.name || "Unknown Item"}</h3>
+                                            <p className="text-gray-400">Qty: {item.qty}</p>
+                                        </div>
+
+                                        <div className="text-xl font-bold text-white">
+                                            ₹{(item.price * item.qty).toFixed(2)}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Totals Footer */}
+                        {order.order_items.length > 0 && (
+                            <div className="mt-8 border-t border-gray-700 pt-8 space-y-3">
+                                <div className="flex justify-between text-gray-400 text-lg">
+                                    <span>Sub Total:</span>
+                                    <span>₹{order.total.toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between text-gray-400 text-lg">
+                                    <span>Tax (0%):</span>
+                                    <span>₹0.00</span>
+                                </div>
+                                <div className="flex justify-between text-3xl font-bold text-white mt-4">
+                                    <span>Total:</span>
+                                    <span>₹{order.total.toFixed(2)}</span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
