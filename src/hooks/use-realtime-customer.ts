@@ -4,12 +4,8 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { OrderWithItems, Payment } from "@/lib/types/database";
 
-interface OrderWithPayment extends OrderWithItems {
-    payment?: Payment | null;
-}
-
 export function useRealtimeCustomerOrder(orderId: string, initialOrder: OrderWithItems | null) {
-    const [order, setOrder] = useState<OrderWithPayment | null>(initialOrder);
+    const [order, setOrder] = useState<OrderWithItems | null>(initialOrder);
     const [payment, setPayment] = useState<Payment | null>(null);
 
     useEffect(() => {

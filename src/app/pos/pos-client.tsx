@@ -311,6 +311,13 @@ export function POSClient({ products, tables, initialSession, paymentMethods }: 
                     <a href="/kitchen" target="_blank">
                         <Button variant="outline" size="sm">Kitchen Display ↗</Button>
                     </a>
+                    {currentOrder && (
+                        <a href={`/customer?order_id=${currentOrder.id}`} target="_blank">
+                            <Button variant="outline" size="sm" className="text-blue-600 border-blue-200 hover:bg-blue-50">
+                                Customer View ↗
+                            </Button>
+                        </a>
+                    )}
                 </div>
             </header>
 
