@@ -38,13 +38,31 @@ export async function confirmPayment(paymentId: string, orderId: string): Promis
 
     if (paymentError) return { error: paymentError.message };
 
-    // Update order status to paid
-    const { error: orderError } = await supabase
+    // Fetch current order to decide next status
+    const { data: order, error: fetchError } = await supabase
         .from("orders")
-        .update({ status: "paid" })
-        .eq("id", orderId);
+        .select("status")
+        .eq("id", orderId)
+        .single();
 
-    if (orderError) return { error: orderError.message };
+    if (fetchError) return { error: fetchError.message };
+
+    // Logic:
+    // - If 'open' -> 'sent' (Auto-send to kitchen)
+    // - If 'completed' -> 'paid' (Close order)
+    // - If 'sent'/'preparing' -> Keep as is (Kitchen is working on it)
+    let newStatus = null;
+    if (order.status === "open") newStatus = "sent";
+    else if (order.status === "completed") newStatus = "paid";
+
+    if (newStatus) {
+        const { error: orderError } = await supabase
+            .from("orders")
+            .update({ status: newStatus })
+            .eq("id", orderId);
+
+        if (orderError) return { error: orderError.message };
+    }
 
     revalidatePath("/pos");
     revalidatePath("/kitchen");

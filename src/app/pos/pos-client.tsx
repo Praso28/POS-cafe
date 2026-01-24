@@ -404,21 +404,13 @@ export function POSClient({ products, tables, initialSession, paymentMethods }: 
                             <span>₹{currentOrder?.total?.toFixed(2) || "0.00"}</span>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="grid grid-cols-1 gap-2">
                             <Button
-                                variant="outline"
-                                className="h-14"
-                                onClick={handleSendToKitchen}
-                                disabled={isLoading || !currentOrder?.order_items.length}
-                            >
-                                Send to Kitchen
-                            </Button>
-                            <Button
-                                className="h-14"
+                                className="h-14 w-full bg-green-600 hover:bg-green-700 text-lg font-bold"
                                 onClick={() => setShowPayment(true)}
                                 disabled={!currentOrder?.order_items.length}
                             >
-                                Payment
+                                Proceed to Payment (₹{currentOrder?.total?.toFixed(2)})
                             </Button>
                         </div>
                     </div>

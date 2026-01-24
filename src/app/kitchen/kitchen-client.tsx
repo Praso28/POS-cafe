@@ -59,6 +59,7 @@ export function KitchenClient({ initialOrders }: KitchenClientProps) {
     function OrderCard({ order }: { order: OrderWithItems }) {
         const config = statusConfig[order.status as keyof typeof statusConfig];
         const orderNumber = order.id.slice(-4).toUpperCase();
+        // console.log("order", order);
 
         return (
             <Card className="mb-4">
@@ -73,13 +74,13 @@ export function KitchenClient({ initialOrders }: KitchenClientProps) {
                 </CardHeader>
                 <CardContent>
                     <div className="mb-3 pb-2 border-b">
-                        <span className="font-semibold text-lg">{order.tables.name}</span>
+                        <span className="font-semibold text-lg">{order.tables?.name || "Unknown Table"}</span>
                     </div>
 
                     <ul className="space-y-2 mb-4">
                         {order.order_items.map((item) => (
                             <li key={item.id} className="flex justify-between items-center">
-                                <span className="text-lg">{item.products.name}</span>
+                                <span className="text-lg">{item.products?.name || "Unknown Item"}</span>
                                 <Badge variant="outline" className="text-lg px-3">×{item.qty}</Badge>
                             </li>
                         ))}

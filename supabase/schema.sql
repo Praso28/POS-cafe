@@ -85,12 +85,14 @@ ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
 -- Create policies (permissive for hackathon, tighten for production)
 -- Products: Anyone authenticated can read, write
 CREATE POLICY "Allow authenticated read products" ON products FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Allow anon read products" ON products FOR SELECT TO anon USING (true);
 CREATE POLICY "Allow authenticated insert products" ON products FOR INSERT TO authenticated WITH CHECK (true);
 CREATE POLICY "Allow authenticated update products" ON products FOR UPDATE TO authenticated USING (true);
 CREATE POLICY "Allow authenticated delete products" ON products FOR DELETE TO authenticated USING (true);
 
 -- Tables: Anyone authenticated can read, write
 CREATE POLICY "Allow authenticated read tables" ON tables FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Allow anon read tables" ON tables FOR SELECT TO anon USING (true);
 CREATE POLICY "Allow authenticated insert tables" ON tables FOR INSERT TO authenticated WITH CHECK (true);
 CREATE POLICY "Allow authenticated update tables" ON tables FOR UPDATE TO authenticated USING (true);
 CREATE POLICY "Allow authenticated delete tables" ON tables FOR DELETE TO authenticated USING (true);
