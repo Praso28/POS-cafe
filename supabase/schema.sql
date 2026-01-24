@@ -96,7 +96,7 @@ CREATE POLICY "Allow authenticated update tables" ON tables FOR UPDATE TO authen
 CREATE POLICY "Allow authenticated delete tables" ON tables FOR DELETE TO authenticated USING (true);
 
 -- POS Sessions: Users can manage their own sessions
-CREATE POLICY "Allow authenticated read sessions" ON pos_sessions FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Allow authenticated read sessions" ON pos_sessions FOR SELECT TO authenticated USING (auth.uid() = user_id);
 CREATE POLICY "Allow authenticated insert sessions" ON pos_sessions FOR INSERT TO authenticated WITH CHECK (true);
 CREATE POLICY "Allow authenticated update sessions" ON pos_sessions FOR UPDATE TO authenticated USING (true);
 
