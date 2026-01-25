@@ -34,60 +34,60 @@ export default async function AdminDashboard() {
     ];
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 relative" style={{ zIndex: 1 }}>
             <div>
-                <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-                <p className="text-gray-500 mt-1">Overview of your café</p>
+                <h1 className="text-3xl font-bold text-slate-800">Dashboard</h1>
+                <p className="text-slate-500 mt-1">Overview of your café</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {stats.map((stat) => (
                     <Link key={stat.title} href={stat.href}>
-                        <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                        <Card className="hover:shadow-card-hover transition-all duration-300 cursor-pointer border-white/40 bg-white/60">
                             <CardHeader className="flex flex-row items-center justify-between pb-2">
-                                <CardTitle className="text-sm font-medium text-gray-500">
+                                <CardTitle className="text-sm font-medium text-slate-500">
                                     {stat.title}
                                 </CardTitle>
                                 <span className="text-2xl">{stat.icon}</span>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-3xl font-bold">{stat.value}</div>
-                                <p className="text-sm text-gray-500 mt-1">{stat.subtitle}</p>
+                                <div className="text-3xl font-bold text-slate-800">{stat.value}</div>
+                                <p className="text-sm text-slate-500 mt-1">{stat.subtitle}</p>
                             </CardContent>
                         </Card>
                     </Link>
                 ))}
             </div>
 
-            <Card>
+            <Card className="border-white/40 bg-white/60">
                 <CardHeader>
-                    <CardTitle>Quick Setup</CardTitle>
+                    <CardTitle className="text-slate-800">Quick Setup</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <p className="text-gray-600">
+                    <p className="text-slate-600">
                         Welcome to your Café POS System! Here's how to get started:
                     </p>
-                    <ol className="list-decimal list-inside space-y-2 text-gray-600">
+                    <ol className="list-decimal list-inside space-y-2 text-slate-600">
                         <li>
-                            <Link href="/admin/products" className="text-blue-600 hover:underline">
+                            <Link href="/admin/products" className="text-green-600 hover:text-green-700 hover:underline font-medium">
                                 Add your products
                             </Link>{" "}
                             (coffee, pastries, etc.)
                         </li>
                         <li>
-                            <Link href="/admin/tables" className="text-blue-600 hover:underline">
+                            <Link href="/admin/tables" className="text-green-600 hover:text-green-700 hover:underline font-medium">
                                 Set up your tables
                             </Link>{" "}
                             (Table 1, Counter, etc.)
                         </li>
                         <li>
-                            <Link href="/admin/payments" className="text-blue-600 hover:underline">
+                            <Link href="/admin/payments" className="text-green-600 hover:text-green-700 hover:underline font-medium">
                                 Configure payment methods
                             </Link>{" "}
                             (Cash, UPI, Cards)
                         </li>
                         <li>
-                            <Link href="/pos" className="text-blue-600 hover:underline">
+                            <Link href="/pos" className="text-green-600 hover:text-green-700 hover:underline font-medium">
                                 Start taking orders
                             </Link>{" "}
                             on the POS terminal

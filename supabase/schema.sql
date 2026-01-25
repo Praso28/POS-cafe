@@ -66,6 +66,15 @@ CREATE TABLE IF NOT EXISTS payments (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Product Categories
+CREATE TABLE IF NOT EXISTS product_categories (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  color TEXT DEFAULT '#FFFFFF',
+  sort_order INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
 -- Insert default payment methods
 INSERT INTO payment_methods (name, type, enabled) VALUES
   ('Cash', 'cash', true),
@@ -81,6 +90,7 @@ ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE order_items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE payment_methods ENABLE ROW LEVEL SECURITY;
 ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE product_categories ENABLE ROW LEVEL SECURITY;
 
 -- Create policies (permissive for hackathon, tighten for production)
 -- Products: Anyone authenticated can read, write
@@ -126,6 +136,13 @@ CREATE POLICY "Allow authenticated read payments" ON payments FOR SELECT TO auth
 CREATE POLICY "Allow authenticated insert payments" ON payments FOR INSERT TO authenticated WITH CHECK (true);
 CREATE POLICY "Allow authenticated update payments" ON payments FOR UPDATE TO authenticated USING (true);
 CREATE POLICY "Allow anon read payments" ON payments FOR SELECT TO anon USING (true);
+
+-- Product Categories: Anyone authenticated can manage
+CREATE POLICY "Allow authenticated read product_categories" ON product_categories FOR SELECT TO authenticated USING (true);
+CREATE POLICY "Allow anon read product_categories" ON product_categories FOR SELECT TO anon USING (true);
+CREATE POLICY "Allow authenticated insert product_categories" ON product_categories FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "Allow authenticated update product_categories" ON product_categories FOR UPDATE TO authenticated USING (true);
+CREATE POLICY "Allow authenticated delete product_categories" ON product_categories FOR DELETE TO authenticated USING (true);
 
 -- Enable Realtime for specific tables
 ALTER PUBLICATION supabase_realtime ADD TABLE orders;

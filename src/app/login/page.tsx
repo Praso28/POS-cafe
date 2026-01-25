@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { WaveBackgroundInline } from "@/components/layout/wave-background";
 
 export default function LoginPage() {
     const [isSignUp, setIsSignUp] = useState(false);
@@ -52,16 +53,19 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
-            <Card className="w-full max-w-md mx-4 shadow-xl">
+        <div className="min-h-screen flex items-center justify-center relative" style={{ background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)' }}>
+            {/* Wave Background */}
+            <WaveBackgroundInline />
+
+            <Card className="w-full max-w-md mx-4 shadow-soft-xl">
                 <CardHeader className="text-center space-y-2">
-                    <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mb-4">
-                        <span className="text-2xl text-white font-bold">☕</span>
+                    <div className="mx-auto w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+                        <span className="text-3xl">☕</span>
                     </div>
-                    <CardTitle className="text-2xl font-bold">
+                    <CardTitle className="text-2xl font-bold text-slate-800">
                         {isSignUp ? "Create Account" : "Welcome Back"}
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-slate-500">
                         {isSignUp
                             ? "Sign up to access the POS system"
                             : "Sign in to your café POS account"}
@@ -70,18 +74,18 @@ export default function LoginPage() {
                 <CardContent>
                     <form action={handleSubmit} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email" className="text-slate-700">Email</Label>
                             <Input
                                 id="email"
                                 name="email"
                                 type="email"
                                 placeholder="staff@cafe.com"
                                 required
-                                className="h-12"
+                                className="h-12 rounded-xl border-slate-200 focus:border-green-500 focus:ring-green-500/20"
                             />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password" className="text-slate-700">Password</Label>
                             <Input
                                 id="password"
                                 name="password"
@@ -89,7 +93,7 @@ export default function LoginPage() {
                                 placeholder="••••••••"
                                 required
                                 minLength={6}
-                                className="h-12"
+                                className="h-12 rounded-xl border-slate-200 focus:border-green-500 focus:ring-green-500/20"
                             />
                         </div>
                         <Button
@@ -109,7 +113,7 @@ export default function LoginPage() {
                         <button
                             type="button"
                             onClick={() => setIsSignUp(!isSignUp)}
-                            className="text-sm text-blue-600 hover:underline"
+                            className="text-sm text-green-600 hover:text-green-700 hover:underline transition-colors"
                         >
                             {isSignUp
                                 ? "Already have an account? Sign in"
@@ -118,6 +122,13 @@ export default function LoginPage() {
                     </div>
                 </CardContent>
             </Card>
+
+            {/* Footer */}
+            <div className="absolute bottom-4 text-center text-slate-400 text-sm">
+                Built with <span className="font-medium text-slate-500">Next.js</span> & <span className="font-medium text-slate-500">Supabase</span>
+                <span className="mx-2">|</span>
+                <span className="text-green-500">◆</span>
+            </div>
         </div>
     );
 }
