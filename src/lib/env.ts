@@ -30,8 +30,8 @@ export function validateEnv() {
     console.warn('⚠️  NEXT_PUBLIC_SUPABASE_URL should start with https://');
   }
 
-  // Validate key format (basic check)
-  if (anonKey && anonKey.length < 100) {
+  // Validate key format (supports both new sb_publishable_ keys and legacy JWT anon keys)
+  if (anonKey && !anonKey.startsWith('sb_publishable_') && anonKey.length < 100) {
     console.warn('⚠️  NEXT_PUBLIC_SUPABASE_ANON_KEY seems too short. Please verify.');
   }
 }
